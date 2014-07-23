@@ -1,15 +1,54 @@
-## Put comments here that give an overall description of what your
-## functions do
+#################################################
+#                                               #
+#            Introduction to R                  #
+#               Assignment 2                    #
+#                                               #
+#            Student: Sigal Duek                #
+#                                               #
+#################################################
 
-## Write a short comment describing this function
+# A pair of functions that cache the inverse of a matrix.
 
-makeCacheMatrix <- function(x = matrix()) {
-
+###################################################
+# This function creates a special "matrix" object #  
+# that can cache its inverse.                     #
+###################################################
+makeCacheMatrix <- function(mat = matrix()) {
+  inv <- NULL
+  set <- function(y) {
+    if (!is.matrix(y)){
+      stop("error - input is not a matrix")
+      
+    }
+    mat <<- y   
+    inv <<- NULL    
+  }
+  
+  get <- function() mat
+  
+  setInv <- function(invMat) inv <<- invMat   
+  getInv <- function() inv
+  list(set = set, get = get,
+       setInv = setInv,
+       getInv = getInv)
 }
 
-
-## Write a short comment describing this function
-
-cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+###################################################
+# This function computes the inverse of the       # 
+# special "matrix" returned by makeCacheMatrix    #
+# above. If the inverse has already been          #  
+# calculated (and the matrix has not changed),    #
+# then the cachesolve should retrieve the inverse #  
+# from the cache.                                 #
+###################################################
+cacheSolve <- function(mat, ...) {
+  cInv <- mat$getInv()
+  if(!is.null(cInv)) {
+    message("getting cached data")
+    return(cInv)
+  }
+  data <- mat$get()
+  cInv <- solve(data)
+  mat$setInv(cInv)
+  cInv
 }
